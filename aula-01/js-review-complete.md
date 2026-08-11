@@ -3,6 +3,7 @@
 ## 1. Boas Práticas Gerais
 
 ### 1.1 Variáveis e Escopo
+
 ```javascript
 // ❌ Criar variáveis globais no escopo global
 let globalVar = "bad";
@@ -14,10 +15,11 @@ let instance = {};
 // ✅ Preferir const para referências imutáveis
 const array = [1, 2, 3];
 array.push(4); // OK - const permite mutação do array
-array = [5];   // Erro - não pode reassign
+array = [5]; // Erro - não pode reassign
 ```
 
 ### 1.2 ECMAScript 2020+
+
 ```javascript
 // ✅ Optional Chaining
 const name = user?.profile?.name;
@@ -34,12 +36,15 @@ if (!response.ok) hasError = true;
 const padded = "5".padStart(2, "0"); // "05"
 
 // ✅ Non-Optional Chaining com Promise
-const result = await fetch(url).then(r => r.text()).catch(() => "fallback");
+const result = await fetch(url)
+  .then((r) => r.text())
+  .catch(() => "fallback");
 ```
 
 ## 2. Estruturas de Controle
 
 ### 2.1 For Loops
+
 ```javascript
 // ✅ Loop com cláusula de parada
 for (let i = 0; i < array.length; i++) {
@@ -56,12 +61,14 @@ for (const item of array) {
 
 // ✅ Evitar while sem condição de parada
 let i = 0;
-while (i < 10) { // SEMPRE deve ter condição de parada
+while (i < 10) {
+  // SEMPRE deve ter condição de parada
   i++;
 }
 ```
 
 ### 2.2 Switch Statements
+
 ```javascript
 // ✅ Usar switches com break ou return
 function getStatus(code) {
@@ -79,9 +86,10 @@ function getStatus(code) {
 ```
 
 ### 2.3 Ternary Operator
+
 ```javascript
 // ✅ Usar ternário com cláusulas curtas
-const status = (user && user.active) ? "Active" : "Inactive";
+const status = user && user.active ? "Active" : "Inactive";
 
 // ❌ Evitar navegação profunda
 // ❌ if (a && b) ? c : d : e (muito difícil de ler)
@@ -90,15 +98,18 @@ const status = (user && user.active) ? "Active" : "Inactive";
 ## 3. Funções
 
 ### 3.1 Funções Declarações vs Arrow Functions
+
 ```javascript
 // ✅ Funções anônimas (arrow)
 const multiply = (a, b) => a * b;
 
 // ✅ Funções declarativas
-function add(a, b) { return a + b; }
+function add(a, b) {
+  return a + b;
+}
 
 // ✅ Arrow com body simples
-const greet = name => `Hello, ${name}`;
+const greet = (name) => `Hello, ${name}`;
 
 // ❌ Arrow com body complexo (objeto literal ou blocos)
 const getObj = (id) => {
@@ -108,14 +119,16 @@ const getObj = (id) => {
 ```
 
 ### 3.2 Higher-Order Functions
+
 ```javascript
 // ✅ Funções de callback apropriadas
-const results = data.filter(item => item.active)
-                    .map(item => item.name)
-                    .sort((a, b) => a.localeCompare(b));
+const results = data
+  .filter((item) => item.active)
+  .map((item) => item.name)
+  .sort((a, b) => a.localeCompare(b));
 
 // ✅ Currying
-const multiply = a => b => a * b;
+const multiply = (a) => (b) => a * b;
 const double = multiply(2); // Resultado: b => 2 * b
 
 // ✅ Partial application
@@ -126,6 +139,7 @@ console.log(addFive(3)); // 8
 ## 4. Manejo de Erros
 
 ### 4.1 try...catch...finally
+
 ```javascript
 // ✅ Try-catch com finally
 try {
@@ -156,6 +170,7 @@ throw new Error("Descrição do erro explícita");
 ```
 
 ### 4.2 Error Classes
+
 ```javascript
 // ✅ Criar classes de erro customizadas
 class AppError extends Error {
@@ -180,6 +195,7 @@ const err = Object.assign(new Error(), { name: "CustomError" });
 ```
 
 ### 4.3 Error Handling Patterns
+
 ```javascript
 // ✅ Error handling com async/await
 const handleUserRequest = async (req, res) => {
@@ -200,7 +216,7 @@ const handleUserRequest = async (req, res) => {
 // ✅ Validation com validadores (Zod, Joi, etc)
 const schema = z.object({
   name: z.string().min(1),
-  email: z.string().email()
+  email: z.string().email(),
 });
 
 // ✅ Timeout com AbortController
@@ -221,6 +237,7 @@ try {
 ## 5. Asynchronous Patterns
 
 ### 5.1 async/await
+
 ```javascript
 // ✅ async/await com try-catch
 const processData = async () => {
@@ -235,10 +252,7 @@ const processData = async () => {
 };
 
 // ✅ Parallel execution
-const [users, posts] = await Promise.all([
-  fetchUsers(),
-  fetchPosts()
-]);
+const [users, posts] = await Promise.all([fetchUsers(), fetchPosts()]);
 
 // ✅ Sequential execution (nunca use for, use await)
 const results = [];
@@ -251,24 +265,30 @@ for (const item of [1, 2, 3]) {
 ```
 
 ### 5.2 Promise Patterns
+
 ```javascript
 // ✅ Promise.all vs Promise.allSettled
 const results = await Promise.allSettled(promiseArray);
-const successes = results.filter(r => r.status === "fulfilled").map(r => r.value);
-const failures = results.filter(r => r.status === "rejected").map(r => r.reason);
+const successes = results
+  .filter((r) => r.status === "fulfilled")
+  .map((r) => r.value);
+const failures = results
+  .filter((r) => r.status === "rejected")
+  .map((r) => r.reason);
 
 // ✅ Promise.all vs Promise.any
 // Promise.all: falha se qualquer um falhar
 // Promise.any: sucesso se qualquer um suceder
 
 // ✅ Catching all promises
-const safePromises = promises.map(p => {
-  return p.catch(err => ({ error: err.message, ok: false }));
+const safePromises = promises.map((p) => {
+  return p.catch((err) => ({ error: err.message, ok: false }));
 });
 const results = await Promise.all(safePromises);
 ```
 
 ### 5.3 Throttle e Debounce
+
 ```javascript
 // Throttle
 const throttle = (fn, limit) => {
@@ -293,33 +313,37 @@ const debounce = (fn, delay) => {
 
 // ✅ Debounce para input (evita chamadas repetitivas)
 const searchInput = document.getElementById("search");
-searchInput.addEventListener("input", debounce((e) => {
-  fetchSearch(e.target.value);
-}, 300));
+searchInput.addEventListener(
+  "input",
+  debounce((e) => {
+    fetchSearch(e.target.value);
+  }, 300),
+);
 ```
 
 ## 6. Manipulação de Arrays e Objetos
 
 ### 6.1 Array Methods
+
 ```javascript
 // ✅ Array.from para arrays iteráveis
 const arrayLike = { 0: "a", 1: "b", length: 2 };
 const arr = Array.from(arrayLike); // ["a", "b"]
 
 // ✅ Array.prototype.find
-const found = arr.find(item => item.id === 123);
+const found = arr.find((item) => item.id === 123);
 
 // ✅ Array.prototype.filter
-const filtered = arr.filter(item => item.active);
+const filtered = arr.filter((item) => item.active);
 
 // ✅ Array.prototype.map
-const mapped = arr.map(item => item.name.toUpperCase());
+const mapped = arr.map((item) => item.name.toUpperCase());
 
 // ✅ Array.prototype.reduce
 const sum = arr.reduce((acc, item) => acc + item.value, 0);
 
 // ✅ Array.prototype.flatMap
-const flattened = arr.flatMap(item => [item.a, item.b]);
+const flattened = arr.flatMap((item) => [item.a, item.b]);
 
 // ✅ Array.prototype.flat (para array aninhado)
 const flat = arr.flat(2);
@@ -335,6 +359,7 @@ const newArr = [...arr, 100];
 ```
 
 ### 6.2 Object Methods
+
 ```javascript
 // ✅ Object.fromEntries
 const obj = { a: 1, b: 2 };
@@ -369,6 +394,7 @@ const deepClone = (obj) => {
 ## 7. Strings
 
 ### 7.1 Template Literals
+
 ```javascript
 // ✅ Interpolação de strings
 const name = "world";
@@ -389,6 +415,7 @@ const message = `Nome: ${user.name}, Idade: ${user.age}`;
 ```
 
 ### 7.2 String Methods
+
 ```javascript
 // ✅ Includes
 const hasValue = str.includes("hello");
@@ -418,6 +445,7 @@ const duplicated = str.replace(/(\w)\1/g, "$1"); // remove duplicatas consecutiv
 ## 8. Manipulação de Arquivos e Sistema
 
 ### 8.1 File System (Node.js)
+
 ```javascript
 // ✅ Usando fs.promises (async/await)
 const fs = await import("fs/promises");
@@ -452,6 +480,7 @@ const resolve = path.resolve(__dirname, "src", "index.js");
 ```
 
 ### 8.2 Trabalhando com JSON
+
 ```javascript
 // ✅ Read e Write JSON
 const fs = await import("fs/promises");
@@ -470,6 +499,7 @@ await fs.writeFile("output.json", JSON.stringify(data, null, 2));
 ## 9. Módulos (ES Modules)
 
 ### 9.1 Import e Export
+
 ```javascript
 // ✅ Modern ES Modules
 import { foo, bar } from "./utils.js";
@@ -482,11 +512,15 @@ export { foo, bar };
 export * from "./utils";
 
 // ✅ Export individual (recommended)
-export function calculate(x, y) { return x + y; }
+export function calculate(x, y) {
+  return x + y;
+}
 export const PI = 3.14159;
 
 // ✅ Expor classes
-export class MyClass { constructor() {} }
+export class MyClass {
+  constructor() {}
+}
 
 // ✅ Re-export
 export { something } from "./other.js";
@@ -499,6 +533,7 @@ export { default as MyComponent } from "./component.js";
 ```
 
 ### 9.2 Módulos Dinâmicos (import())
+
 ```javascript
 // ✅ Dynamically importing modules
 const module = await import("./module.js");
@@ -507,11 +542,12 @@ const result = await module.function();
 // ✅ Com Promise.all (para múltiplos imports dinâmicos)
 const [module1, module2] = await Promise.all([
   import("./module1.js"),
-  import("./module2.js")
+  import("./module2.js"),
 ]);
 ```
 
 ### 9.3 Node.js Modules
+
 ```javascript
 // ✅ Node.js common patterns
 // index.js (root)
@@ -531,6 +567,7 @@ log("Application started");
 ## 10. Programação Assíncrona
 
 ### 10.1 Callback Patterns
+
 ```javascript
 // ❌ Callback hell (estrutura aninhada)
 const process = (callback) => {
@@ -555,14 +592,14 @@ const process = async () => {
 // ✅ Chaining de Promises
 const process = () =>
   fetchData()
-    .then(data => processData(data))
-    .then(result => result);
+    .then((data) => processData(data))
+    .then((result) => result);
 
 // ✅ Error handling
 const process = () =>
   fetchData()
-    .then(data => processData(data))
-    .catch(err => {
+    .then((data) => processData(data))
+    .catch((err) => {
       console.error(err);
       throw err;
     });
@@ -570,7 +607,7 @@ const process = () =>
 // ✅ Promise.all com timeout
 const processWithTimeout = async (promises, timeout = 5000) => {
   const results = await Promise.allSettled(promises);
-  const failures = results.filter(r => r.status === "rejected");
+  const failures = results.filter((r) => r.status === "rejected");
   return results;
 };
 
@@ -581,13 +618,14 @@ const retry = async (fn, retries = 3, delay = 1000) => {
       return await fn();
     } catch (error) {
       if (i === retries - 1) throw error;
-      await new Promise(resolve => setTimeout(resolve, delay));
+      await new Promise((resolve) => setTimeout(resolve, delay));
     }
   }
 };
 ```
 
 ### 10.2 Event Loop Patterns
+
 ```javascript
 // ✅ process.nextTick
 process.nextTick(() => {
@@ -671,6 +709,7 @@ function readOnly(arr: (number | string)[]): number[] {
 ## 12. Performance
 
 ### 12.1 Common Performance Pitfalls
+
 ```javascript
 // ❌ Iterar sobre arrays grandes com filter/map (sem lazy evaluation)
 // ✅ Lazy evaluation / generator
@@ -712,6 +751,7 @@ const paginate = (array, page, perPage) => {
 ## 13. Segurança
 
 ### 13.1 Security Best Practices
+
 ```javascript
 // ✅ Sanitização de inputs
 const sanitize = (input) => {
@@ -747,6 +787,7 @@ const isMatch = await bcrypt.compare(password, hashedPassword);
 ## 14. Testes
 
 ### 14.1 Testing Patterns
+
 ```javascript
 // ✅ Testes com Jest (framework)
 test("descreva o comportamento", () => {
@@ -776,6 +817,7 @@ jest.setTimeout(10000);
 ## 15. Debugging e Profiling
 
 ### 15.1 Debugging Techniques
+
 ```javascript
 // ✅ Debugging com console.trace
 console.trace("Caminho de execução");
@@ -797,14 +839,23 @@ node --prof your-app.js
 ## 16. Checklist Rápido
 
 ### [ ] 1. Variáveis: use `const` ou `let`
+
 ### [ ] 2. Async/await vs callbacks
+
 ### [ ] 3. Error handling: try-catch
+
 ### [ ] 4. Strings: template literals
+
 ### [ ] 5. Arrays: métodos modernos
+
 ### [ ] 6. Objetos: spread operator
+
 ### [ ] 7. Módulos: import/export
+
 ### [ ] 8. Tipagem: TypeScript
+
 ### [ ] 9. Segurança: validações
+
 ### [ ] 10. Testes: cobertura
 
 ---
